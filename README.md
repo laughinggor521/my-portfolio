@@ -1,68 +1,51 @@
-# 个人主页 / 作品展示网站
+# my-portfolio CMS staging build
 
-一个响应式、现代简洁风格的静态个人主页，使用 Docker + Nginx，可部署到连接 GitHub 仓库的 Orkestr 项目。
+此项目包是独立的测试版本，不会自动修改你现有的 GitHub `main` 分支或线上 Orkestr 服务。先部署到新分支/新服务验证，确认后再切换。
 
-## 页面包含
+## 功能
+- Flask + Gunicorn 后端，与静态前端运行在同一容器。
+- PostgreSQL 单独部署；SQLAlchemy + Flask-Migrate/Alembic 管理数据库版本。
+- 管理员登录、文章新增/编辑/删除、作品新增/编辑/删除、留言审核、图片上传。
+- CSRF 保护、密码哈希、HttpOnly/SameSite/Secure Cookie、基础安全响应头、简单的登录/留言频率限制。
 
-- 响应式首页与个人介绍
-- 技能标签
-- 作品展示卡片
-- 联系方式与社交链接占位符
-- `/healthz` 健康检查接口
-- Nginx 静态资源缓存
-- 容器通过 `PORT` 环境变量监听端口，默认 `8080`
+## 环境变量（在 Orkestr Web 服务中设置）
+- `DATABASE_URL`（必填）：Orkestr PostgreSQL 的私有连接 URL，使用平台给出的真实值。
+- `SECRET_KEY`（必填）：随机长密钥。可本地运行 `python -c "import secrets; print(secrets.token_urlsafe(48))"` 生成。
+- `ADMIN_USERNAME`、`ADMIN_PASSWORD`：首次创建管理员。密码至少 14 位且独立使用；已有管理员不会在重部署时被重置。
+- `PORT=8080`：若 Orkestr 手动要求配置端口。
+- `UPLOAD_DIR=/data/uploads`：图片上传目录。
+- `MAX_CONTENT_LENGTH_MB=8`、`COOKIE_SECURE=true`、`WEB_CONCURRENCY=2`：可选配置。生产 HTTPS 环境保留 `COOKIE_SECURE=true`。
 
-## 部署到 GitHub + Orkestr
+`.env.example` 只有占位符，不要把真实密码或连接 URL 提交到 GitHub。
 
-### 1. 上传代码到 GitHub
+## Orkestr 部署步骤
+1. 在 Orkestr 创建独立 PostgreSQL 数据库，优先使用内部/私有连接 URL。
+2. 在 GitHub 建新分支 `cms-staging` 或新仓库上传此项目；先不要覆盖现有 `main`。
+3. 在 Orkestr 新建一个测试 Web 服务，连接测试分支/新仓库，使用 Dockerfile 构建。
+4. 设置以上环境变量，端口为 `8080`。
+5. 若启用图片上传，给 Web 服务挂载持久化卷到 `/data`。容器文件系统不是永久存储；未挂载持久卷时，重建容器可能丢图。如果 Orkestr 没有适用的持久卷，请先改用 S3 兼容对象存储，再开放上传功能。
+6. 部署后测试 `/healthz`、`/api/status`、`/admin.html`；创建文章、作品，提交留言并审核，上传图片并重部署确认图片仍在。
+7. 测试通过前不要更改原有生产服务的仓库/分支/域名。
 
-1. 下载并解压项目 ZIP。
-2. 打开你的 GitHub 仓库。
-3. 建议先为当前状态页面创建一个备份分支，或新建仓库保存作品集。
-4. 将解压后的项目文件上传到仓库根目录，确保根目录直接包含 `Dockerfile`、`nginx.conf.template`、`README.md` 和 `site/` 文件夹。
-5. 提交（Commit）并推送（Push）更改。
+## 数据库迁移方案
+- `migrations/versions/0001_initial_schema.py` 创建 `admins`、`posts`、`projects`、`messages` 四张表。
+- 容器启动前执行 `flask --app wsgi:app db upgrade`，仅应用仓库中已提交的版本化迁移，不用 `create_all()` 自动猜测结构。
+- 后续开发环境生成迁移：`flask --app wsgi:app db migrate -m "describe change"`；仔细检查生成文件，测试后提交。
+- 对生产数据库做任何迁移前先创建备份/快照。不要修改或删除已应用的迁移文件。降级不是备份的替代品。
+- 初次启动后会尝试按 `ADMIN_USERNAME`/`ADMIN_PASSWORD` 创建管理员；如果账号已存在，不会自动改密码。
 
-如果使用 Git 命令行，可以在解压后的项目目录执行：
+## 安全与限制
+- 不要把 `DATABASE_URL`、`SECRET_KEY`、`ADMIN_PASSWORD` 写入前端或 Git。
+- 上传图片限制扩展名、尝试实际解码、限制尺寸；上传文件以 `application/octet-stream` 和 `nosniff` 提供。数据库备份不包含图片文件，需单独备份 `/data/uploads`。
+- 留言默认待审核；前端以文本方式转义展示，不能直接把用户留言当 HTML 渲染。
+- 频率限制是单进程内存实现，重启会重置，多副本不共享。正式公网使用建议加平台层限流/WAF。
+- 当前为可部署的起步版，不含密码重置、富文本编辑器、分页、图片删除/替换界面或完整安全审计。正文以纯文本显示，生产上线前请充分测试。
 
-```bash
-git init
-git add .
-git commit -m "Create personal portfolio website"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
-git push -u origin main
-```
-
-如果本地目录已经是一个 Git 仓库，请不要重复执行 `git init` 或 `git remote add origin`；改用现有仓库的常规 `git add`、`git commit`、`git push` 流程。
-
-### 2. 配置 Orkestr
-
-1. 在 Orkestr 中创建新项目，或将现有项目指向这个仓库。
-2. 选择 Dockerfile 构建方式。
-3. 如果平台允许配置应用监听端口，设置为 `8080`；如果 Orkestr 注入了 `PORT` 环境变量，容器会使用它。
-4. 部署成功后，使用 Orkestr 分配的 HTTPS 域名访问主页。
-
-### 3. 后续更新
-
-修改 `site/index.html`、`site/styles.css` 或 `site/script.js`，然后提交并推送到已连接的 GitHub 分支。若 Orkestr 已启用 Git 自动部署，平台会触发重新构建与部署。
-
-## 自定义内容
-
-编辑 `site/index.html`，把示例中的姓名、介绍、项目、邮箱和社交链接替换成你自己的信息。项目卡片中的链接默认是占位链接，发布前请替换。
-
-## 本地预览
-
-有 Docker 的电脑可以在项目目录运行：
-
-```bash
-docker build -t orkestr-portfolio .
-docker run --rm -p 8080:8080 orkestr-portfolio
-```
-
-浏览器访问 `http://localhost:8080`。健康检查地址为 `http://localhost:8080/healthz`。
-
-## 注意
-
-- 这是静态网站，不包含登录系统、数据库或表单后端。
-- HTTPS 由 Orkestr 的 HTTPS 入口提供；容器内部只提供 HTTP 服务。
-- 这个包不会自动修改你现有的 GitHub 仓库或 Orkestr 项目。请先备份现有状态页面，再决定是新建仓库还是替换现有项目。
+## 验收清单
+- [ ] 首页与 `/healthz` 正常。
+- [ ] `/admin.html` 可登录。
+- [ ] 文章草稿/发布/编辑/删除正常。
+- [ ] 作品新增/编辑/隐藏/删除正常。
+- [ ] 留言默认不公开，审核通过后可见。
+- [ ] 上传图片后容器重部署仍可访问。
+- [ ] 数据库和图片分别有备份方案。

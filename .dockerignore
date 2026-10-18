@@ -1,5 +1,7 @@
-__pycache__/
-*.py[cod]
-.git/
+.git
 .env
-README.md
+.venv
+__pycache__
+*.pyc
+instance
+uploads
