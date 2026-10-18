@@ -1,1 +1,1 @@
-
+Flask-Migrate/Alembic schema migrations. Review every generated migration before deployment. Never edit an already-applied migration. Back up PostgreSQL before production schema changes.
