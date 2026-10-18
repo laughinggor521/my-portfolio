@@ -1,8 +1,12 @@
 from logging.config import fileConfig
+from pathlib import Path
 from alembic import context
 from flask import current_app
-config=context.config
-if config.config_file_name: fileConfig(config.config_file_name)
+
+config = context.config
+
+if config.config_file_name and Path(config.config_file_name).is_file():
+    fileConfig(config.config_file_name)
 target_metadata=current_app.extensions["migrate"].db.metadata
 def run_migrations_offline():
     context.configure(url=current_app.config["SQLALCHEMY_DATABASE_URI"],target_metadata=target_metadata,literal_binds=True,dialect_opts={"paramstyle":"named"},compare_type=True)
