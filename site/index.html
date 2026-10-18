@@ -1,1 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="个人主页与作品集，展示项目、技能与联系方式。">
+  <title>个人主页 — Portfolio</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="返回首页">
+      <span class="brand-mark">P</span><span>个人作品集<span class="brand-dot">.</span></span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="#about">关于我</a>
+      <a href="#work">作品</a>
+      <a href="#contact" class="nav-cta">联系我 <span aria-hidden="true">↗</span></a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main id="home">
+    <section class="hero section-wrap">
+      <div class="hero-copy">
+        <div class="availability"><span class="availability-dot"></span> 你好，欢迎来到我的主页</div>
+        <p class="eyebrow">PERSONAL PORTFOLIO</p>
+        <h1>用想法创造<br><span class="gradient-text">有价值的作品。</span></h1>
+        <p class="hero-description">我是 <strong>你的名字</strong>，一名热爱设计、技术与创造的独立创作者。这里记录我的项目、探索和正在发生的想法。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#work">查看我的作品 <span aria-hidden="true">↘</span></a>
+          <a class="button button-quiet" href="#about">认识一下 <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-item"><span class="meta-number">01</span><span>持续学习</span></div>
+          <div class="meta-separator"></div>
+          <div class="meta-item"><span class="meta-number">02</span><span>动手实践</span></div>
+          <div class="meta-separator"></div>
+          <div class="meta-item"><span class="meta-number">03</span><span>分享成果</span></div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="抽象创意图形">
+        <div class="visual-orbit orbit-a"></div>
+        <div class="visual-orbit orbit-b"></div>
+        <div class="visual-card card-back"><span class="mini-label">IDEAS / 2026</span><span class="sparkle">✳</span></div>
+        <div class="visual-card card-front">
+          <div class="avatar">YN</div>
+          <div class="visual-name">Your Name</div>
+          <div class="visual-role">Creator · Learner · Builder</div>
+          <div class="visual-line"></div>
+          <div class="visual-stats"><span><b>∞</b><small>好奇心</small></span><span><b>24/7</b><small>灵感收集</small></span></div>
+        </div>
+        <div class="floating-chip chip-top"><span>✦</span> 创意驱动</div>
+        <div class="floating-chip chip-bottom"><span class="tiny-pulse"></span> 持续构建中</div>
+        <div class="visual-star star-one">✳</div><div class="visual-star star-two">✧</div>
+      </div>
+    </section>
+
+    <section class="section-wrap intro-strip" id="about">
+      <div class="section-kicker"><span>01</span> / ABOUT</div>
+      <div class="intro-content">
+        <h2>保持好奇，<br class="mobile-break">把想法变成现实。</h2>
+        <div class="intro-text">
+          <p>我喜欢从一个小问题开始，通过研究、设计和不断尝试，把复杂的事情变得清晰易用。</p>
+          <p>这个网站是我的数字名片，也是一份持续更新的作品记录。欢迎看看我正在做什么。</p>
+          <div class="skill-list"><span>创意与设计</span><span>网页开发</span><span>问题解决</span><span>持续学习</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap work-section" id="work">
+      <div class="section-heading">
+        <div><div class="section-kicker"><span>02</span> / SELECTED WORK</div><h2>精选作品<span class="heading-period">.</span></h2></div>
+        <p>一些练习、实验和正在完善的项目。<br>更多作品会陆续放在这里。</p>
+      </div>
+      <div class="project-grid">
+        <article class="project-card project-lilac">
+          <div class="project-art art-dashboard"><div class="dash-top"><i></i><i></i><i></i><span>OVERVIEW</span></div><div class="dash-body"><div class="dash-sidebar"></div><div class="dash-main"><div class="dash-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="dash-bottom"><i></i><i></i></div></div></div></div>
+          <div class="project-info"><div><span class="project-type">WEB · UI</span><h3>项目一：数据看板</h3></div><a class="project-link" href="#contact" aria-label="咨询数据看板项目">↗</a></div>
+          <p>用清晰的视觉层级呈现信息，让复杂数据更容易理解。</p><div class="tag-row"><span>界面设计</span><span>响应式</span></div>
+        </article>
+        <article class="project-card project-peach">
+          <div class="project-art art-landing"><div class="landing-window"><div class="window-dots">•••</div><div class="landing-copy"><span>LESS, BUT BETTER.</span><b>Make room<br>for good ideas.</b><i></i></div><div class="landing-shape"></div></div></div>
+          <div class="project-info"><div><span class="project-type">BRANDING · WEB</span><h3>项目二：品牌落地页</h3></div><a class="project-link" href="#contact" aria-label="咨询品牌落地页项目">↗</a></div>
+          <p>为一个虚构品牌设计简洁、易读且具有辨识度的展示页面。</p><div class="tag-row"><span>品牌表达</span><span>网页设计</span></div>
+        </article>
+        <article class="project-card project-mint">
+          <div class="project-art art-notes"><div class="note note-one"><span>IDEA 01</span><b>Start small.</b><small>从一个简单的想法开始。</small></div><div class="note note-two"><span>IDEA 02</span><b>Keep going.</b><small>持续迭代，不断进步。</small></div><div class="note-star">✳</div></div>
+          <div class="project-info"><div><span class="project-type">EXPERIMENT · NOTES</span><h3>项目三：灵感收集册</h3></div><a class="project-link" href="#contact" aria-label="咨询灵感收集册项目">↗</a></div>
+          <p>记录值得尝试的点子、学习笔记和有趣的小实验。</p><div class="tag-row"><span>知识整理</span><span>个人项目</span></div>
+        </article>
+      </div>
+      <p class="placeholder-note">提示：以上为示例作品。发布前请替换成你自己的真实项目和链接。</p>
+    </section>
+
+    <section class="section-wrap contact-section" id="contact">
+      <div class="contact-panel">
+        <div class="contact-orb" aria-hidden="true"></div>
+        <div class="section-kicker"><span>03</span> / SAY HELLO</div>
+        <h2>有个想法？<br><span>聊一聊吧。</span></h2>
+        <p>欢迎交流项目、分享灵感，或者只是打个招呼。</p>
+        <a class="button button-light" href="mailto:hello@example.com">hello@example.com <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="#home"><span class="brand-mark">P</span><span>个人作品集<span class="brand-dot">.</span></span></a>
+    <span>© <span id="year">2026</span> Your Name. 用心制作。</span>
+    <a class="back-top" href="#home">返回顶部 ↑</a>
+  </footer>
+</body>
+</html>
 
